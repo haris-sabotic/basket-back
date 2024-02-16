@@ -1,0 +1,22 @@
+{
+  "name": "basket-back",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.9.1",
+    "bcryptjs": "^2.4.3",
+    "crypto-js": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.9.1",
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0"
+  }
+}
