@@ -16,3 +16,11 @@ export const signToken = (id) => {
         expiresIn: '1d',
     });
 };
+
+export const getUserIdFromToken = async (token) => {
+    const secret = "urmom";
+
+    const { id } = jwt.verify(token, secret);
+
+    return id;
+};

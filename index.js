@@ -12,6 +12,8 @@ import {
 } from './checks.js';
 
 import CryptoJS from 'crypto-js';
+import { getUserIdFromToken } from './util.js';
+import prisma from './db.js';
 
 const WS_SERVER = new WebSocketServer({ port: 8000 });
 
@@ -59,7 +61,7 @@ WS_SERVER.on('connection', function connection(ws) {
         }
     });
 
-    ws.on('message', function message(data) {
+    ws.on('message', async function message(data) {
         const json = JSON.parse(data);
 
         if (json.tag == "new_client") {
@@ -68,7 +70,7 @@ WS_SERVER.on('connection', function connection(ws) {
 
         if (json.tag == "scored") {
             const sendError = (error) => {
-                // ws.send(JSON.stringify({ tag: "error", error }));
+                ws.send(JSON.stringify({ tag: "error", error }));
             };
 
             try {
@@ -115,14 +117,35 @@ WS_SERVER.on('connection', function connection(ws) {
                 CLIENTS[json.authToken].timeSinceLastPoint = Date.now();
                 CLIENTS[json.authToken].score += (msg.scoreType == "one") ? 1 : 2;
 
-                // ws.send(JSON.stringify({ tag: "score_approved", currentScore: CLIENTS[json.authToken].score }));
+                ws.send(JSON.stringify({ tag: "score_approved", currentScore: CLIENTS[json.authToken].score }));
             } catch (error) {
                 sendError("no haxx0ring!!");
             }
         }
 
         if (json.tag == "finished") {
-            ws.send(JSON.stringify({ tag: "results", score: CLIENTS[json.authToken].score }));
+            const id = getUserIdFromToken(json.authToken);
+
+            const user = await prisma.user.findUnique({
+                where: { id },
+                select: {
+                    role: true
+                }
+            });
+
+            if (user) {
+                const score = CLIENTS[json.authToken].score;
+                const highscore = (user.highscore < score) ? score : user.highscore;
+
+                await prisma.user.update({
+                    where: { id },
+                    data: {
+                        highscore
+                    }
+                });
+
+                ws.send(JSON.stringify({ tag: "results", score, highscore }));
+            }
         }
     });
 });
