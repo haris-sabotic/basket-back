@@ -20,7 +20,7 @@ export const signToken = (id) => {
 export const getUserIdFromToken = async (token) => {
     const secret = "urmom";
 
-    const { id } = jwt.verify(token, secret);
+    const { id } = await jwt.verify(token, secret);
 
     return id;
 };

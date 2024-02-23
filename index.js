@@ -127,10 +127,7 @@ WS_SERVER.on('connection', function connection(ws) {
             const id = getUserIdFromToken(json.authToken);
 
             const user = await prisma.user.findUnique({
-                where: { id },
-                select: {
-                    role: true
-                }
+                where: { id }
             });
 
             if (user) {
