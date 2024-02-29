@@ -70,12 +70,12 @@ WS_SERVER.on('connection', function connection(ws) {
 
         if (json.tag == "scored") {
             const sendError = (error) => {
+                console.log(`Error: ${error}`);
                 ws.send(JSON.stringify({ tag: "error", error }));
             };
 
             try {
                 const msgText = CryptoJS.AES.decrypt(json.msg, CLIENTS[json.authToken].score.toString()).toString(CryptoJS.enc.Utf8);
-                console.log(`START ${msgText} END`);
                 const msg = JSON.parse(msgText);
 
                 if (!CLIENTS[json.authToken]) {
