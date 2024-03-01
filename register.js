@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import prisma from "./db.js";
 import { hashPassword, signToken } from "./util.js";
 
@@ -30,7 +31,8 @@ export async function register(username, email, password) {
 
     const user = await prisma.user.create({
         data: {
-            username, email, password: await hashPassword(password)
+            username, email, password: await hashPassword(password),
+            passwordResetToken: uuidv4()
         }
     });
 
