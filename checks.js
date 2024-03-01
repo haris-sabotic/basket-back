@@ -12,14 +12,14 @@ export function checkConsecutiveFrameDistance(RECORDING_BALL) {
     return true;
 }
 
-// Return false if the ball was stationary for the entire first half of the recording
+// Return false if the ball was stationary for the entire recording
 export function checkBallNotStationary(RECORDING_BALL) {
     let firstPosition = RECORDING_BALL[0];
 
-    for (let i = 0; i < RECORDING_BALL.length / 2; i++) {
+    for (let i = 0; i < RECORDING_BALL.length; i++) {
         const position = RECORDING_BALL[i];
 
-        if (position != firstPosition) {
+        if (position.x != firstPosition.x && position.y != firstPosition.y) {
             return true;
         }
     }
