@@ -146,6 +146,10 @@ WS_SERVER.on('connection', function connection(ws) {
         }
 
         if (json.tag == "finished") {
+            if (!json.authToken) {
+                return;
+            }
+
             const id = getUserIdFromToken(json.authToken);
 
             const user = await prisma.user.findUnique({
