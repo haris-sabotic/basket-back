@@ -156,19 +156,36 @@ WS_SERVER.on('connection', function connection(ws) {
                 where: { id }
             });
 
-            if (user) {
+            if (user && user.gamesPlayed < 10) {
                 const score = CLIENTS[json.authToken].score;
                 const highscore = (user.highscore < score) ? score : user.highscore;
 
                 await prisma.user.update({
                     where: { id },
                     data: {
-                        highscore
+                        highscore,
+                        gamesPlayed: {
+                            increment: 1
+                        }
                     }
                 });
 
                 ws.send(JSON.stringify({ tag: "results", score, highscore }));
             }
+        }
+
+        if (json.tag == "games_played") {
+            if (!json.authToken) {
+                return;
+            }
+
+            const id = getUserIdFromToken(json.authToken);
+
+            const user = await prisma.user.findUnique({
+                where: { id }
+            });
+
+            ws.send(JSON.stringify({ tag: "games_played", gamesPlayed: user.gamesPlayed }));
         }
     });
 });

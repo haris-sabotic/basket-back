@@ -14,5 +14,6 @@ model User {
     password           String
     highscore          Int      @default(0)
     passwordResetToken String   @unique @default("")
+    gamesPlayed        Int      @default(0)
     createdAt          DateTime @default(now())
 }
