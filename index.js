@@ -1,6 +1,8 @@
 import { WebSocketServer } from 'ws';
 import { register } from './register.js';
 import { login } from './login.js';
+import { forgotPassword } from './forgot_password.js';
+import { resetPassword } from './reset_password.js';
 import {
     check60SecsElapsed,
     checkBallHoopDistance,
@@ -58,7 +60,27 @@ WS_SERVER.on('connection', function connection(ws) {
                 tag: "login",
                 data: result
             }));
+        } else if (json.tag == "forgot_password") {
+            const result = await forgotPassword(
+                json.msg.email,
+            );
+
+            ws.send(JSON.stringify({
+                tag: "forgot_password",
+                data: result
+            }));
+        } else if (json.tag == "reset_password") {
+            const result = await resetPassword(
+                json.msg.password,
+                json.msg.token
+            );
+
+            ws.send(JSON.stringify({
+                tag: "reset_password",
+                data: result
+            }));
         }
+
     });
 
     ws.on('message', async function message(data) {

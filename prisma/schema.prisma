@@ -8,10 +8,11 @@ generator client {
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
-    username  String   @unique
-    email     String   @unique
-    password  String
-    highscore Int      @default(0)
-    createdAt DateTime @default(now())
+    id                 Int      @id @default(autoincrement())
+    username           String   @unique
+    email              String   @unique
+    password           String
+    highscore          Int      @default(0)
+    passwordResetToken String   @unique @default("")
+    createdAt          DateTime @default(now())
 }
