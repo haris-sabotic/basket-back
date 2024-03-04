@@ -19,6 +19,7 @@ import { getUserIdFromToken } from './util.js';
 import prisma from './db.js';
 
 const WS_SERVER = new WebSocketServer({ port: process.env.WS_PORT });
+console.log(`Running websocket server on port ${process.env.WS_PORT}`);
 
 let CLIENTS = {};
 
