@@ -12,12 +12,13 @@ import {
     checkRepeatingRecordings,
     checkTimeSinceLastPoint
 } from './checks.js';
+import 'dotenv/config';
 
 import CryptoJS from 'crypto-js';
 import { getUserIdFromToken } from './util.js';
 import prisma from './db.js';
 
-const WS_SERVER = new WebSocketServer({ port: 8000 });
+const WS_SERVER = new WebSocketServer({ port: process.env.WS_PORT });
 
 let CLIENTS = {};
 
